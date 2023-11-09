@@ -151,11 +151,14 @@ export default function DragFromOutsideLayout({ uniqueId }) {
           <div key={item.i} data-grid={item} className="chart-item ">
             {item.i === "pie-chart" ? (
               <PieChart
+              key={item.i}
                 width={chartDimensions["pie-chart"].width}
                 height={chartDimensions["pie-chart"].height}
               />
             ) : item.i === "bar-chart" ? (
               <BarChart
+              key={item.i}
+
                 width={chartDimensions["bar-chart"].width}
                 height={chartDimensions["bar-chart"].height}
               />

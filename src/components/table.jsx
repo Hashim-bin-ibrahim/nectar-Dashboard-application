@@ -76,7 +76,7 @@ export default function TableComponent() {
 
       <Modal
         title="Delete Layout"
-        visible={isDeleteModalVisible}
+        open={isDeleteModalVisible}
         onOk={handleDeleteLayout}
         onCancel={handleCancelDelete}
         okText="Delete"
