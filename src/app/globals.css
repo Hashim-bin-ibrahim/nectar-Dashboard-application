@@ -25,3 +25,34 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+
+table {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-collapse: collapse;
+  vertical-align: middle;
+}
+
+table td,
+table th {
+  padding: 10px 20px;
+  border: 1px solid #ececec;
+  vertical-align: middle;
+}
+
+table thead>tr>th {
+  vertical-align: middle;
+  border-bottom: 0;
+}
+
+table p {
+  margin-bottom: 0;
+}
+
+table.clean td,
+table.clean th {
+  border: 0;
+  border-top: 1px solid #ececec;
+}
