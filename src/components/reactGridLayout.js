@@ -8,8 +8,8 @@ import PieChart from "./pieChart";
 import BarChart from "./barChart";
 import { Button, Modal } from "antd";
 
-const ReachableContext = createContext(null);
-const UnreachableContext = createContext(null);
+// const ReachableContext = createContext(null);
+// const UnreachableContext = createContext(null);
 const config = {
   title: "Notification!",
   content: (
@@ -21,12 +21,14 @@ const config = {
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-export default function DragFromOutsideLayout() {
+export default function DragFromOutsideLayout({ uniqueId }) {
   const [modal, contextHolder] = Modal.useModal();
-
   const [mounted, setmounted] = useState(false);
   const [uniqueName, setUniqueName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const data = JSON.parse(sessionStorage.getItem("layouts") || "[]");
+  const uniqueData = data.filter((item) => item.name == uniqueId);
 
   const [layout, setLayout] = useState([
     { i: "pie-chart", x: 0, y: 0, w: 4, h: 4, static: false },
@@ -114,7 +116,8 @@ export default function DragFromOutsideLayout() {
             setUniqueName(e.target.value);
             setErrorMessage("");
           }}
-          value={uniqueName}
+          // value={uniqueId ? uniqueData?.[0]?.name : uniqueName}
+          defaultValue={uniqueId ? uniqueData?.[0]?.name : uniqueName}
         />
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 

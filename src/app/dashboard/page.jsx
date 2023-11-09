@@ -9,9 +9,7 @@ export default function Dashboard() {
   return (
     <div>
       <Header child="true" />
-      <div className="d-flex">
-        <DragFromOutsideLayout />
-      </div>
+      <DragFromOutsideLayout />
     </div>
   );
 }
