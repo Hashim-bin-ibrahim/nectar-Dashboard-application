@@ -7,21 +7,13 @@ import "/node_modules/react-resizable/css/styles.css";
 import PieChart from "./pieChart";
 import BarChart from "./barChart";
 import { Button, Modal } from "antd";
-
-// const ReachableContext = createContext(null);
-// const UnreachableContext = createContext(null);
-const config = {
-  title: "Notification!",
-  content: (
-    <>
-      <h1>successfully Saved</h1>
-    </>
-  ),
-};
+import { useRouter } from "next/navigation";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export default function DragFromOutsideLayout({ uniqueId }) {
+  const router = useRouter();
+
   const [modal, contextHolder] = Modal.useModal();
   const [mounted, setmounted] = useState(false);
   const [uniqueName, setUniqueName] = useState("");
@@ -49,39 +41,45 @@ export default function DragFromOutsideLayout({ uniqueId }) {
       setErrorMessage("Please Enter a unique name to save your dashboard.");
     } else {
       setUniqueName("");
-      // Checking if th name is alrdy prsent in session storage
-      const existingNames = sessionStorage.getItem("uniqueNames");
-      let parsedNames = [];
 
-      if (existingNames) {
-        parsedNames = JSON.parse(existingNames);
-        if (parsedNames.includes(uniqueName)) {
+      const existingNames = JSON.parse(
+        sessionStorage.getItem("layouts") || "[]"
+      );
+      const dashBoardNames = existingNames.map((item) => item.name);
+
+      if (uniqueId || uniqueId === uniqueName) {
+        // Editing an existing layout
+        const layoutToUpdate = existingNames.find(
+          (item) => item.name === uniqueId
+        );
+        if (layoutToUpdate) {
+          layoutToUpdate.name = uniqueName;
+          layoutToUpdate.layout = layout;
+          layoutToUpdate.date = new Date().toISOString();
+        }
+      } else {
+        if (dashBoardNames.includes(uniqueName)) {
           setErrorMessage(
             "Name already exists. Please choose a different name."
           );
           return;
         }
-      } else {
-        sessionStorage.setItem("uniqueNames", JSON.stringify([]));
+
+        const currentDate = new Date();
+
+        const newLayout = {
+          name: uniqueName,
+          layout: layout,
+          date: currentDate.toISOString(),
+        };
+
+        existingNames.push(newLayout);
       }
 
-      const currentDate = new Date();
+      sessionStorage.setItem("layouts", JSON.stringify(existingNames));
 
-      const newLayout = {
-        name: uniqueName,
-        layout: layout,
-        date: currentDate.toISOString(),
-      };
-
-      const layouts = JSON.parse(sessionStorage.getItem("layouts") || "[]");
-      layouts.push(newLayout);
-      sessionStorage.setItem("layouts", JSON.stringify(layouts));
-
-      const updatedNames = [...parsedNames, uniqueName];
-      sessionStorage.setItem("uniqueNames", JSON.stringify(updatedNames));
-
-      // alert("Layout saved successfully");
       modal.info(config);
+      // router.push("/");
     }
   };
 
@@ -105,6 +103,15 @@ export default function DragFromOutsideLayout({ uniqueId }) {
     );
   };
 
+  const config = {
+    title: "Notification!",
+    content: (
+      <>
+        {uniqueId ? <h1>successfully Updated</h1> : <h1>successfully Saved</h1>}
+      </>
+    ),
+  };
+
   return (
     <div>
       <div className="input_wrapper">
@@ -116,7 +123,6 @@ export default function DragFromOutsideLayout({ uniqueId }) {
             setUniqueName(e.target.value);
             setErrorMessage("");
           }}
-          // value={uniqueId ? uniqueData?.[0]?.name : uniqueName}
           defaultValue={uniqueId ? uniqueData?.[0]?.name : uniqueName}
         />
         {errorMessage && <p className="error-message">{errorMessage}</p>}

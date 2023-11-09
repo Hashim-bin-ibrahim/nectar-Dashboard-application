@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import Link from "next/link";
 
@@ -10,14 +10,12 @@ export default function Header({ child }) {
           <img src="../../nectar-logo.svg" alt="" width="60" height="40" />
         </a>
         {!child && (
-          <button className="btn btn-success  ">
-            <Link
-              href={"/dashboard"}
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Create New DashBoard
-            </Link>
-          </button>
+          <Link
+            href={"/dashboard"}
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            <button className="btn btn-success  ">Create New DashBoard</button>
+          </Link>
         )}
       </div>
     </nav>
